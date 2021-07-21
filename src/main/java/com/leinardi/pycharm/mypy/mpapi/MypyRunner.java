@@ -317,8 +317,10 @@ public class MypyRunner {
                     break;
                 } else {
                     LOG.info("Command Line string: " + cmd.getCommandLineString());
-                    // the daemon sometimes fails when idea invokes the inspection multiple times
-                    if (mypyConfigService.isUseDaemon() && error.equals("The connection is busy.")) {
+                    // "The connection is busy." - the daemon sometimes fails when idea invokes the inspection multiple times
+                    // the rest of the errors seem to be the daemon itself being extremely flaky
+                    if (mypyConfigService.isUseDaemon() &&
+                            (error.equals("The connection is busy.") || error.equals("Timed out waiting for daemon to start") || error.startsWith("Daemon crashed!"))) {
                         LOG.warn(error + " attempt #" + retryCount);
                     } else {
                         throw new MypyToolException("Error while running Mypy: " + error);
