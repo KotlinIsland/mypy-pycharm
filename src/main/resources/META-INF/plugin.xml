@@ -23,14 +23,12 @@
          on how to target different products -->
     <!-- uncomment to enable plugin in all products -->
     <depends>com.intellij.modules.lang</depends>
-    <!--suppress PluginXmlValidity -->
     <depends>com.intellij.modules.python</depends>
 
 
     <project-components>
         <component>
             <implementation-class>com.leinardi.pycharm.mypy.MypyPlugin</implementation-class>
-            <interface-class>com.leinardi.pycharm.mypy.MypyPlugin</interface-class>
         </component>
     </project-components>
 
@@ -41,8 +39,8 @@
                     factoryClass="com.leinardi.pycharm.mypy.toolwindow.MypyToolWindowFactory"
                     icon="/com/leinardi/pycharm/mypy/images/mypy.png"/>
 
-        <projectService serviceInterface="com.leinardi.pycharm.mypy.MypyConfigService"
-                        serviceImplementation="com.leinardi.pycharm.mypy.MypyConfigService"/>
+        <projectService
+                serviceImplementation="com.leinardi.pycharm.mypy.MypyConfigService"/>
 
         <projectConfigurable instance="com.leinardi.pycharm.mypy.MypyConfigurable"/>
 
@@ -55,6 +53,8 @@
 
         <checkinHandlerFactory id="CheckStyleIDEACheckInHandlerFactory"
                                implementation="com.leinardi.pycharm.mypy.handlers.ScanFilesBeforeCheckinHandlerFactory"/>
+        <notificationGroup id="Mypy Alerts" displayType="BALLOON"/>
+        <notificationGroup id="Mypy Logging" displayType="NONE"/>
     </extensions>
 
     <actions>
@@ -117,7 +117,7 @@
 
             <action id="MypyStopCheck"
                     class="com.leinardi.pycharm.mypy.actions.StopCheck"
-                    text="Stop the running scan"
+                    text="Stop the Running Scan"
                     description="Stop the scan currently being run"
                     icon="/actions/suspend.png">
             </action>

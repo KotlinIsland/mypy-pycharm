@@ -17,7 +17,9 @@
 package com.leinardi.pycharm.mypy.toolwindow;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,9 +46,10 @@ public class TogglableTreeNode extends DefaultMutableTreeNode {
         this.visible = visible;
     }
 
-    @SuppressWarnings("unchecked")
     List<TogglableTreeNode> getAllChildren() {
-        return Collections.unmodifiableList(children);
+        List<TogglableTreeNode> result = new ArrayList<>();
+        for (TreeNode t : children) result.add((TogglableTreeNode) t);
+        return Collections.unmodifiableList(result);
     }
 
     @Override

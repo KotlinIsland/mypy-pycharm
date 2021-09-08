@@ -2,9 +2,10 @@
 [![GitHub (pre-)release](https://img.shields.io/github/release/leinardi/mypy-pycharm/all.svg?style=plastic)](https://github.com/leinardi/mypy-pycharm/releases)
 [![Travis](https://img.shields.io/travis/leinardi/mypy-pycharm/master.svg?style=plastic)](https://travis-ci.org/leinardi/mypy-pycharm)
 [![GitHub license](https://img.shields.io/github/license/leinardi/mypy-pycharm.svg?style=plastic)](https://github.com/leinardi/mypy-pycharm/blob/master/LICENSE) 
-[![Stars](https://img.shields.io/github/stars/leinardi/mypy-pycharm.svg?style=social&label=Stars)](https://github.com/leinardi/mypy-pycharm/stargazers) 
-
+[![Stars](https://img.shields.io/github/stars/leinardi/mypy-pycharm.svg?style=social&label=Stars)](https://github.com/leinardi/mypy-pycharm/stargazers)
+<!-- Plugin description -->
 This plugin provides both real-time and on-demand scanning of Python files with Mypy from within PyCharm/IDEA.
+<!-- Plugin description end -->
 
 Mypy is a Python source code analyzer which looks for programming errors,
 helps enforcing a coding standard and sniffs for some code smells 

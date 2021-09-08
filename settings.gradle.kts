@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-rootProject.name = 'mypy-pycharm'
+rootProject.name = "mypy-pycharm"
 

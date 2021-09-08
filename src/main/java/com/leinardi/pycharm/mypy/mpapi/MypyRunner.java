@@ -214,7 +214,7 @@ public class MypyRunner {
                 LOG.info("Command Line string: " + cmd.getCommandLineString());
                 LOG.warn("Error while detecting Mypy path: " + error);
             }
-            if (process.exitValue() != 0 || !path.isPresent()) {
+            if (process.exitValue() != 0 || path.isEmpty()) {
                 LOG.info("Command Line string: " + cmd.getCommandLineString());
                 LOG.warn("Mypy path detect process.exitValue: " + process.exitValue());
                 return "";
@@ -266,7 +266,7 @@ public class MypyRunner {
 
     private static List<Issue> runMypy(Project project, Set<String> filesToScan, String mypyPath,
                                        String mypyConfigFilePath, MypyConfigService mypyConfigService)
-            throws InterruptedIOException, InterruptedException {
+            throws InterruptedIOException {
         if (filesToScan.isEmpty()) {
             return Collections.emptyList();
         }

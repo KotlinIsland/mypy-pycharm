@@ -37,8 +37,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static com.intellij.notification.NotificationGroup.balloonGroup;
-import static com.intellij.notification.NotificationGroup.logOnlyGroup;
 import static com.intellij.notification.NotificationListener.URL_OPENING_LISTENER;
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
@@ -48,8 +46,8 @@ import static com.leinardi.pycharm.mypy.util.Exceptions.rootCauseOf;
 
 public final class Notifications {
     private static final Logger LOG = com.intellij.openapi.diagnostic.Logger.getInstance(Notifications.class);
-    private static final NotificationGroup BALLOON_GROUP = balloonGroup(message("plugin.notification.alerts"));
-    private static final NotificationGroup LOG_ONLY_GROUP = logOnlyGroup(message("plugin.notification.logging"));
+    private static final NotificationGroup BALLOON_GROUP = com.intellij.notification.NotificationGroupManager.getInstance().getNotificationGroup(message("plugin.notification.alerts"));
+    private static final NotificationGroup LOG_ONLY_GROUP = com.intellij.notification.NotificationGroupManager.getInstance().getNotificationGroup(message("plugin.notification.logging"));
     private static final String TITLE = message("plugin.name");
 
     private Notifications() {
@@ -57,43 +55,50 @@ public final class Notifications {
 
     public static void showInfo(final Project project, final String infoText) {
         BALLOON_GROUP
-                .createNotification(TITLE, infoText, INFORMATION, URL_OPENING_LISTENER)
+                .createNotification(TITLE, infoText, INFORMATION)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
     public static void showInfo(final Project project, final String title, final String infoText) {
         BALLOON_GROUP
-                .createNotification(title, infoText, INFORMATION, URL_OPENING_LISTENER)
+                .createNotification(title, infoText, INFORMATION)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
     public static void showWarning(final Project project, final String warningText) {
         BALLOON_GROUP
-                .createNotification(TITLE, warningText, WARNING, URL_OPENING_LISTENER)
+                .createNotification(TITLE, warningText, WARNING)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
     public static void showWarning(final Project project, final String title, final String warningText) {
         BALLOON_GROUP
-                .createNotification(title, warningText, WARNING, URL_OPENING_LISTENER)
+                .createNotification(title, warningText, WARNING)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
     public static void showError(final Project project, final String errorText) {
         BALLOON_GROUP
-                .createNotification(TITLE, errorText, ERROR, URL_OPENING_LISTENER)
+                .createNotification(TITLE, errorText, ERROR)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
     public static void showError(final Project project, final String title, final String errorText) {
         BALLOON_GROUP
-                .createNotification(title, errorText, ERROR, URL_OPENING_LISTENER)
+                .createNotification(title, errorText, ERROR)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
     public static void showException(final Project project, final Throwable t) {
         LOG_ONLY_GROUP
-                .createNotification(message("plugin.exception"), messageFor(t), ERROR, URL_OPENING_LISTENER)
+                .createNotification(message("plugin.exception"), messageFor(t), ERROR)
+                .setListener(URL_OPENING_LISTENER)
                 .notify(project);
     }
 
@@ -101,11 +106,11 @@ public final class Notifications {
         Notification notification = BALLOON_GROUP
                 .createNotification(
                         TITLE,
-                        MypyBundle.message("plugin.notification.install-mypy.subtitle"),
                         MypyBundle.message("plugin.notification.install-mypy.content"),
-                        ERROR,
-                        URL_OPENING_LISTENER);
+                        ERROR);
         notification
+                .setSubtitle(MypyBundle.message("plugin.notification.install-mypy.subtitle"))
+                .setListener(URL_OPENING_LISTENER)
                 .addAction(new InstallMypyAction(project, notification))
                 .notify(project);
     }
@@ -114,23 +119,21 @@ public final class Notifications {
         Notification notification = BALLOON_GROUP
                 .createNotification(
                         TITLE,
-                        MypyBundle.message("plugin.notification.unable-to-run-mypy.subtitle"),
                         MypyBundle.message("plugin.notification.unable-to-run-mypy.content"),
-                        ERROR,
-                        URL_OPENING_LISTENER);
+                        ERROR);
         notification
+                .setSubtitle(MypyBundle.message("plugin.notification.unable-to-run-mypy.subtitle"))
+                .setListener(URL_OPENING_LISTENER)
                 .addAction(new OpenPluginSettingsAction(notification))
                 .notify(project);
     }
 
     public static void showNoPythonInterpreter(Project project) {
         Notification notification = BALLOON_GROUP
-                .createNotification(
-                        TITLE,
-                        MypyBundle.message("plugin.notification.no-python-interpreter.content"),
-                        ERROR,
-                        URL_OPENING_LISTENER);
+                .createNotification(TITLE, ERROR);
         notification
+                .setSubtitle(MypyBundle.message("plugin.notification.no-python-interpreter.content"))
+                .setListener(URL_OPENING_LISTENER)
                 .addAction(new ConfigurePythonInterpreterAction(project, notification))
                 .notify(project);
     }
@@ -153,7 +156,7 @@ public final class Notifications {
     }
 
     private static class OpenPluginSettingsAction extends AnAction {
-        private Notification notification;
+        private final Notification notification;
 
         OpenPluginSettingsAction(Notification notification) {
             super(MypyBundle.message("plugin.notification.action.plugin-settings"));
@@ -161,15 +164,15 @@ public final class Notifications {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent event) {
+        public void actionPerformed(@NotNull AnActionEvent event) {
             new Settings().actionPerformed(event);
             notification.expire();
         }
     }
 
     private static class ConfigurePythonInterpreterAction extends AnAction {
-        private Project project;
-        private Notification notification;
+        private final Project project;
+        private final Notification notification;
 
         ConfigurePythonInterpreterAction(Project project, Notification notification) {
             super(MypyBundle.message("plugin.notification.action.configure-python-interpreter"));
@@ -178,15 +181,15 @@ public final class Notifications {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent ignored) {
+        public void actionPerformed(@NotNull AnActionEvent ignored) {
             ShowSettingsUtil.getInstance().showSettingsDialog(project, "Project Interpreter");
             notification.expire();
         }
     }
 
     private static class InstallMypyAction extends AnAction {
-        private Project project;
-        private Notification notification;
+        private final Project project;
+        private final Notification notification;
 
         InstallMypyAction(Project project, Notification notification) {
             super(MypyBundle.message("plugin.notification.action.install-mypy"));
@@ -195,7 +198,7 @@ public final class Notifications {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent ignored) {
+        public void actionPerformed(@NotNull AnActionEvent ignored) {
             Sdk projectSdk = ProjectRootManager.getInstance(project).getProjectSdk();
             if (projectSdk == null) {
                 LOG.debug("Project interpreter not set");
