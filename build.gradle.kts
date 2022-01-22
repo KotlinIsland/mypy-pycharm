@@ -23,13 +23,13 @@ plugins {
     // Java support
     java
     // Kotlin support
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.6.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.1.6"
+    id("org.jetbrains.intellij") version "1.3.1"
     // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "1.3.0"
+    id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.12"
+    id("org.jetbrains.qodana") version "0.1.13"
 }
 
 group = properties("pluginGroup")
@@ -71,6 +71,7 @@ tasks {
         withType<JavaCompile> {
             sourceCompatibility = it
             targetCompatibility = it
+            options.isDeprecation = true
         }
         withType<KotlinCompile> {
             kotlinOptions.jvmTarget = it

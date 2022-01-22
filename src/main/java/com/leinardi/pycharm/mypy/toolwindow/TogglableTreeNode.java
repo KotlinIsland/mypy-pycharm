@@ -47,9 +47,12 @@ public class TogglableTreeNode extends DefaultMutableTreeNode {
     }
 
     List<TogglableTreeNode> getAllChildren() {
-        List<TogglableTreeNode> result = new ArrayList<>();
-        for (TreeNode t : children) result.add((TogglableTreeNode) t);
-        return Collections.unmodifiableList(result);
+        return Collections.unmodifiableList((List<? extends TogglableTreeNode>) children);
+//        return Collections.unmodifiableList(children);
+//        return Collections.unmodifiableList((List<TogglableTreeNode>) children);
+//        List<TogglableTreeNode> result = new ArrayList<>();
+//        for (TreeNode t : children) result.add((TogglableTreeNode) t);
+//        return Collections.unmodifiableList(result);
     }
 
     @Override

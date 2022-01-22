@@ -322,6 +322,7 @@ public class MypyRunner {
                     if (mypyConfigService.isUseDaemon() &&
                             (error.equals("The connection is busy.") || error.equals("Timed out waiting for daemon to start") || error.startsWith("Daemon crashed!"))) {
                         LOG.warn(error + " attempt #" + retryCount);
+                        Notifications.showError(project, cmd.getCommandLineString());
                     } else {
                         throw new MypyToolException("Error while running Mypy: " + error);
                     }

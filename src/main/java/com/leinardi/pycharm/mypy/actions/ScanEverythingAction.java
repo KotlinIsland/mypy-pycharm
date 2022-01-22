@@ -36,6 +36,7 @@ class ScanEverythingAction implements Runnable {
     public void run() {
         List<VirtualFile> filesToScan;
         // all non-excluded files of the project
+        // TODO: scan current module
         filesToScan = VfUtil.flattenFiles(new VirtualFile[]{project.getBaseDir()});
         filesToScan = VfUtil.filterOnlyPythonProjectFiles(project, filesToScan);
 

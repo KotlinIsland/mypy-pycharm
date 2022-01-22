@@ -93,6 +93,6 @@ public class MypyConfigService implements PersistentStateComponent<MypyConfigSer
 
     @Nullable
     public static MypyConfigService getInstance(Project project) {
-        return ServiceManager.getService(project, MypyConfigService.class);
+        return project.getService(MypyConfigService.class);
     }
 }
